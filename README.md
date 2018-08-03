@@ -1,9 +1,9 @@
 # angular-epub-reader
-an ePub reader directive, compatible with ionic / Angular v1, plus sample app.
+An ePub reader directive, compatible with ionic / Angular v1, plus sample app.
 
-angular-epub-reader is a reworking of [Patrick G](https://github.com/geek1011)'s excellent ePubViewer, to make it compatible with [AngularJS] v1 and
-[Ionic v1](https://ionicframework.com/docs/v1/). Parts of it are substantially re-written, parts become quite a bit simpler by using angular's templating system, other parts (styling, for
-example) are mostly completely unchanged, except to rename some classes to prevent collision with Ionic's built-in styling classes.
+angular-epub-reader is a reworking of [Patrick G](https://github.com/geek1011)'s excellent [ePubViewer](https://github.com/geek1011/ePubViewer), to make it compatible with [AngularJS] v1 and
+[Ionic v1](https://ionicframework.com/docs/v1/). Parts of it are substantially re-written, parts become quite a bit simpler by using the Angular templating system, other parts (styling, for
+example) are mostly completely unchanged, except to rename some classes to prevent collision with Ionic's built-in styling classes. I have also removed the original project's dependency on jQuery.
 
 The primary component is a custom AngularJS Directive encapsulating the viewer. You can easily add this as a module to your own app. 
 
@@ -11,9 +11,16 @@ This repo also includes a sample ionic  App codebase illustrating use.
 
 ## Installation
 
-#### Using script tag
+Start a new Ionic v1 project as follows:
 
 Ensure you have Ionic V1 installed.
+
+```
+ionic start angular-epub-reader blank --type ionic1
+```
+
+#### Using script tag
+
 
 Modify your index.html file to include the following:
 
