@@ -1,7 +1,9 @@
 {
   "name": "angular-epub-reader",
   "type": "ionic1",
-  "integrations": {},
+  "integrations": {
+    "gulp": {}
+  },
   "watchPatterns": [
     "scss/**/*",
     "www/**/*",
