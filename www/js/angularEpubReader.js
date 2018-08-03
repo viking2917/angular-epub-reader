@@ -1,4 +1,3 @@
-// things to do. get rid of jquery from the directive
 /**
  * Angular/Ionic ePub Reader Directive
  *
@@ -475,7 +474,6 @@ angular.module('epubreader', [])
 		    let sel = manager ? $scope.state.rendition.manager.getContents() : false;
 		    let window = (sel && (sel.length > 0) && (typeof sel[0].window !== 'undefined')) ? sel[0].window : false;
 		    let selection = window ? window.getSelection().toString().trim() : "";
-		    // let selection = $scope.state.rendition.manager ? $scope.state.rendition.manager.getContents()[0].window.getSelection().toString().trim() : "";
 		    if (!selection || selection.length < 2 || selection.indexOf(" ") > -1) {
 			if ($scope.state.showDictTimeout) window.clearTimeout($scope.state.showDictTimeout);
 			$scope.doDictionary(null);
@@ -519,17 +517,15 @@ angular.module('epubreader', [])
 		    if (word.info && word.info.trim() != "") {
 			$scope.dictionary.info = word.info;
 		    }
-		    
-		    $scope.dictionary.meanings = [];
-		    (word.meanings || []).map((meaning, i) => {
-			$scope.dictionary.meanings.push(meaning);
-		    });
-		    
+
+		    $scope.dictionary.meanings = word.meanings;
+
 		    if (word.credit && word.credit.trim() != "") {
 			$scope.dictionary.credit = word.credit;
 		    }
 
 		    $scope.$apply();
+
 		}).catch(err => {
 		    try {
 			console.error("dictLookup", err);
