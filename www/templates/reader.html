@@ -18,8 +18,7 @@
   </div>
   
   <div class="sidebar-wrapper-left" ng-if="isBookLoaded()" ng-click="doSidebar()" ng-class="{'out' : !state.sidebar}"></div>
-  
-  <div class="sidebar-wrapper" ng-click1="doSidebar()" ng-class="{'out' : !state.sidebar}">
+  <div class="sidebar-wrapper" ng-class="{'out' : !state.sidebar}">
     <div class="sidebar">
       <div class="tab-list">
         <a data-tab="toc" class="reader-item" ng-click="onTabClick($event, 'toc')" ng-class="{'active': state.activeTab === 'toc'}">
@@ -162,16 +161,6 @@
 	<div class="message">
 	  <a ng-click="doOpenBook()" class="big-button">Open a Book</a>
 	</div>
-      </div>
-    </div>
-    <div style="display: none;" class="empty-wrapper">
-      <div class="empty">
-        <div class="app-name">ePubViewer</div>
-        <div class="message">
-          Unknown error. If this message does not disappear in a few seconds, try using a different browser (Chrome or Firefox), and
-          if the issue still persists,
-          <a href="https://github.com/geek1011/ePubViewer">report it here</a>.
-        </div>
       </div>
     </div>
   </div>
