@@ -255,19 +255,30 @@ angular.module('epubreader', [])
 		    $scope.navigation.toc.forEach(function (i, item) {
 			item.active = ($scope.state.book.canonical(item.href) == $scope.state.book.canonical(event.start.href));
 		    });
-		    // $.each($scope.navigation.toc, function (i, item) {
-		    // 	item.active = ($scope.state.book.canonical(item.href) == $scope.state.book.canonical(event.start.href));
-		    // });
 		} catch (err) {
 		    $scope.fatal("error updating toc", err);
 		}
 	    };
 		
 	    $scope.onBookReady = function () {
-		$timeout(function () {
 
-		}, 500);
-		
+		$document.on('keydown', function (event) {
+	    	    switch (event.keyCode) {
+      	    	    case 37: 
+	    		$scope.prevPage();
+	    		break;
+      	    	    case 39: 
+	    		$scope.nextPage();
+	    		break;
+	    	    case 13:									    // get enter key to trigger search.
+	    		if($scope.state.searchQuery) {						    
+	    		    $scope.onSearchClick(false);
+	    		    delete $scope.state.searchQuery;
+	    		}
+	    		break;
+                    }            
+		});
+
 		let chars = 1650;
 		let key = `${$scope.state.book.key()}:locations-${chars}`;
 		let stored = localStorage.getItem(key);
@@ -304,13 +315,12 @@ angular.module('epubreader', [])
 		    book[0].innerHTML = "";
 
 		    $scope.state.rendition = $scope.state.book.renderTo(
-			document.querySelectorAll('.book')[0],
-			{});
+			document.querySelectorAll('.book')[0], {});
 		} catch (err) {
 		    $scope.fatal("error loading book", err);
 		    throw err;
 		}
-
+		
 		$scope.state.book.ready.then($scope.onBookReady).catch( function (err) { $scope.fatal("error loading book", err, false) });
 		$scope.state.book.loaded.metadata.then($scope.onMetadataLoaded).catch( function (err) { $scope.fatal("error loading metadata", err, false) });
 		$scope.state.rendition.on("relocated", $scope.onRenditionRelocatedUpdateIndicators);
@@ -330,10 +340,6 @@ angular.module('epubreader', [])
 		if ($scope.state.dictInterval) window.clearInterval($scope.state.dictInterval);
 		$scope.state.dictInterval = window.setInterval($scope.checkDictionary, 50);
 		$scope.doDictionary(null);
-
-	
-		
-
 	    };
 	    
 	    $scope.doOpenBook = function () {
@@ -496,9 +502,12 @@ angular.module('epubreader', [])
 		if ($scope.state.lastWord) if ($scope.state.lastWord == word) return;
 		$scope.state.lastWord = word;
 		
-		$scope.dictionary = false;
-		if (!word) {
-		    $scope.$apply();
+		// if there is no word passed: reset dictionary if it is set. apply to get rid of existing notes.
+		if(!word) {
+		    if($scope.dictionary) {
+			$scope.dictionary = false;
+			$scope.$apply();
+		    }
 		    return;
 		}
 
@@ -514,12 +523,8 @@ angular.module('epubreader', [])
 		    return obj.result;
 		}).then(word => {
 		    // console.log("dictLookup", word);
-		    if (word.info && word.info.trim() != "") {
-			$scope.dictionary.info = word.info;
-		    }
-
+		    if (word.info && word.info.trim() != "") $scope.dictionary.info = word.info;
 		    $scope.dictionary.meanings = word.meanings;
-
 		    if (word.credit && word.credit.trim() != "") {
 			$scope.dictionary.credit = word.credit;
 		    }
@@ -567,24 +572,6 @@ angular.module('epubreader', [])
 		} catch (err) {}
 	    };
 
-
-	    $document.on('keydown', function (event) {
-	    	switch (event.keyCode) {
-      	    	case 37: 
-	    	    $scope.prevPage();
-	    	    break;
-      	    	case 39: 
-	    	    $scope.nextPage();
-	    	    break;
-	    	case 13:									    // get enter key to trigger search.
-	    	    if($scope.state.searchQuery) {						    
-	    		$scope.onSearchClick(false);
-	    		delete $scope.state.searchQuery;
-	    	    }
-	    	    break;
-                }            
-            });
-	    
 	    $scope.loadSettingsFromStorage();
 	    
 	    try {
@@ -596,6 +583,7 @@ angular.module('epubreader', [])
 		
 		// can stream from a url like this:
 		// ufn = "https://standardebooks.org/ebooks/walter-scott/ivanhoe/dist/walter-scott_ivanhoe.epub";
+              
 		if (ufn) {
 		    fetch(ufn).then(resp => {
 			if (resp.status != 200) throw new Error("response status: " + resp.status.toString() + " " + resp.statusText);
