@@ -61,6 +61,35 @@ EPUB (with images) works nicely.
 - [ePub.js](https://github.com/futurepress/epub.js/)
 - [normalize.css](https://necolas.github.io/normalize.css/) / [sanitizeHtml](https://www.npmjs.com/package/sanitize-html)
 
+### Gotchas with Ionic
+
+If you are using the highlighting features of EpubJS and want to be able to click on highlights (as in the [ePubJS example app](https://github.com/futurepress/epub.js#examples), you have to
+deal with Ionic's event handling. By default Ionic seems to stop propagation on click events it is not in control of. So your click events get eaten and the callback to your highlight
+doesn't get called. E.g. the console.log message in the code below from the sample app  never gets reached.
+
+```
+rendition.on("selected", function(cfiRange, contents) {
+      rendition.annotations.highlight(cfiRange, {}, (e) => {
+        console.log("highlight clicked", e.target);
+      });
+      contents.window.getSelection().removeAllRanges();
+
+    });
+```
+
+To get around that, you need to add "data-tap-disabled=true" to the "G" elements that EpubJS creates, e.g. something like: 
+
+```
+Array.from(document.getElementsByTagName('g')).forEach(function(theG) {
+			    var isEpubGElement = theG.getAttribute('data-epubcfi');
+			    if(isEpubGElement) {
+				theG.setAttribute("data-tap-disabled", true); // stop IONIC from killing the click events on these.
+			    }
+			});
+```
+
+right after you create a highlight.
+
 ### Prerequisites
 
 You will need to have Ionic V1 installed to run the sample app. 
