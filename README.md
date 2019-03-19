@@ -19,6 +19,12 @@ Ensure you have Ionic V1 installed.
 ionic start angular-epub-reader blank --type ionic1
 ```
 
+Be sure to include `<allow-navigation href="*" />` in your config.xml, or the whitelist plugin may block download of the ePub.
+
+(some people have reported they also needed to include something to the effect of 
+`<meta http-equiv="Content-Security-Policy"
+		content="default-src gap://ready file://* blob: *; style-src 'self' blob: http://* https://* 'unsafe-inline'; script-src 'self' http://* https://* 'unsafe-inline' 'unsafe-eval'">`) in their index.html.
+
 #### Using script tag
 
 
